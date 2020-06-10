@@ -3,6 +3,7 @@
 Dependencies : 
 
 ->numpy : pip install numpy
+
 ->pandas : pip install pandas
 
 Acquaintance : Someone who knows you better than you yourself !
