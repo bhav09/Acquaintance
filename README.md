@@ -6,6 +6,8 @@ Dependencies :
 
 ->pandas : pip install pandas
 
+Preferred IDE : Pycharm 
+
 Acquaintance : Someone who knows you better than you yourself !
 
 backend.py : a simpler version of the working of the backend of the actual project.
