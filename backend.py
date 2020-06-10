@@ -1,4 +1,4 @@
-#here the database that we are using is a csv file.
+#here the medium that we are using to store the data is a csv file.
 import csv
 import numpy as np
 import pandas as pd
@@ -130,6 +130,7 @@ def menu():
     for i in order_food:
         y = item_name[i]
         dict_preference[y] += 1
+    print('Preferences are: ')
     print(dict_preference)
 
 def signup():
@@ -176,17 +177,22 @@ def login():                        #has menu (), recommend()
             for i in dictionary:
                 dictionary[i] += dict_preference[i]
             print('Dictionary is:',dictionary)
-            file_name = f'User Data/bhav/{username}-{password}.csv'
+            file_name = f'User Data/{username}/{username}-{password}.csv'
             abc = []
             for i in dictionary:
                 abc.append({'name_of_item': i, 'preferences': dictionary[i]})
-            with open(file_name, 'w', newline='') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=['name_of_item', 'preferences'])
-                writer.writeheader()
-                for data in abc:
-                    writer.writerow(data)
+            try:
+                with open(file_name, 'w', newline='') as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=['name_of_item', 'preferences'])
+                    writer.writeheader()
+                    for data in abc:
+                        writer.writerow(data)
+                    print('Done')
+            except IOError:
+                print('I/O Error')
             #user_data.iloc[:,1] = dict_preference.values()
             user_data.to_csv(check_folder,header='True',index=False)
+            #print('login_file_converted')
             recommend()
             Path(check_folder).replace(f'C:/Users/91884/PycharmProjects/hotel_management_system/User Data/{username}/'+check_folder)
             update()
@@ -202,7 +208,9 @@ def login():                        #has menu (), recommend()
 def recommend():
     #global username,password
     # we want to store the preference based on descending order. So that the customer would be able to order.
-    user_data = pd.read_csv(check_folder)
+    print('--------------------Recommending-----------------------------------')
+    user_data = pd.read_csv(f'User Data/{check_folder}/{username}-{password}.csv')
+    print(user_data)
     user_data.set_index(user_data['name_of_item'])
     user_data.transpose()
     d = user_data['preferences'].to_dict()
@@ -230,6 +238,7 @@ def recommend():
     print('Done')
 
 def update():
+    print('---------------------------Updating-----------------------------')
     dictionary = {}
     user_file = pd.read_csv(f'C:/Users/91884/PycharmProjects/hotel_management_system/User Data/{username}/{username}-{password}.csv')  # now changing the recommendations from the root
     data_dict = csv.reader(open(f'C:/Users/91884/PycharmProjects/hotel_management_system/User Data/{username}/{username}-{password}_recommend.csv'))
@@ -272,10 +281,11 @@ def update():
             writer.writeheader()
             for data in list_to:
                 writer.writerow(data)
-        os.remove(f'C:/Users/91884/PycharmProjects/hotel_management_system/User Data/{username}/{csv_file}')
-        Path(csv_file).rename(f'C:/Users/91884/PycharmProjects/hotel_management_system/User Data/{username}/{csv_file}')
+        os.remove(f'User Data/{username}/{csv_file}')
+        Path(csv_file).rename(f'User Data/{username}/{csv_file}')
     except IOError:
         print('I/O Error')
+
 
 
 #main code
@@ -321,5 +331,4 @@ elif click_to_enter == 'Login':
 #what would you like to order
 #all_food_items()
 
-
-#to do : key aane pe value badhe 
+#to do : try to impute the length of the code
